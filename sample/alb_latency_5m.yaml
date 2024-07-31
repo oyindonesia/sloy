@@ -1,0 +1,15 @@
+name: ALB Latency SLO
+description: >
+  ALB Latency percentiles
+backend: cloudlogging
+exporters:
+  - gsheets:
+      sheet_id: 1NVJyE7_9QyhW1GuY2rJePTRRNizMGNA_B5IvvUrdmYo
+      worksheet_name: alb_latency_percentile
+time_window: 5m
+method: percentile
+service_level_indicator:
+  percentiles: [95, 99]
+  value_key: latency
+  query: >
+    resource.type="http_load_balancer"

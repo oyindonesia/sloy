@@ -1,0 +1,21 @@
+name: GKE Error SLO
+description: >
+  GKE error logs in %
+backend: cloudlogging
+exporters:
+  - gsheets:
+      sheet_id: 1NVJyE7_9QyhW1GuY2rJePTRRNizMGNA_B5IvvUrdmYo
+      worksheet_name: gke_error_rate
+time_window: 1m
+method: error_rate
+service_level_indicator:
+  filter_bad: >
+    resource.type="k8s_container"
+    AND resource.labels.namespace_name="default"
+    AND resource.labels.container_name=~"pay.*"
+    AND severity=ERROR
+  filter_good: >
+    resource.type="k8s_container"
+    AND resource.labels.namespace_name="default"
+    AND resource.labels.container_name=~"pay.*"
+    AND severity!=ERROR

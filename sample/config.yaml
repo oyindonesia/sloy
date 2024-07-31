@@ -1,0 +1,18 @@
+---
+backends:
+  elasticsearch:
+    url: ${ELASTICSEARCH_URL}
+    basic_auth:
+      username: ${ELASTICSEARCH_USERNAME}
+      password: ${ELASTICSEARCH_PASSWORD}
+  cloudlogging:
+    credentials: ${GCP_CREDENTIALS}
+    project_id: ${GCP_PROJECT_ID}
+exporters:
+  slack:
+    token: ${SLACK_TOKEN}
+    channel: ${SLACK_CHANNEL}
+  gsheets:
+    credentials: ${GCP_CREDENTIALS}
+    sheet_id: ${SHEET_ID}
+    worksheet_name: Test2

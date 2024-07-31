@@ -1,0 +1,78 @@
+name: Nginx 5xx SLO
+description: >
+  5xx for Nginx in %
+backend: elasticsearch
+exporters:
+  - gsheets:
+      sheet_id: 1NVJyE7_9QyhW1GuY2rJePTRRNizMGNA_B5IvvUrdmYo
+      worksheet_name: nginx_error_rate
+time_window: 7d
+method: error_rate
+service_level_indicator:
+  es_index: nginx.coremaster-*
+  query_bad: >
+    {
+      "query": {
+        "bool": {
+          "must": [],
+          "filter": [
+              {
+              "bool": {
+                  "should": [
+                  {
+                      "query_string": {
+                      "fields": [
+                          "status_code"
+                      ],
+                      "query": "\\5*"
+                      }
+                  }
+                  ],
+                  "minimum_should_match": 1
+              }
+              }
+          ],
+          "should": [],
+          "must_not": []
+        }
+      }
+    }
+  query_good: >
+    {
+      "query": {
+        "bool": {
+          "must": [],
+          "filter": [
+            {
+              "bool": {
+                "should": [
+                  {
+                    "bool": {
+                    "should": [
+                      {
+                        "query_string": {
+                            "fields": [
+                            "status_code"
+                            ],
+                            "query": "\\2*"
+                        }
+                      }
+                    ],
+                    "minimum_should_match": 1
+                    }
+                  },
+                  {
+                    "query_string": {
+                      "query": "status_code \\3*"
+                    }
+                  }
+                ],
+                "minimum_should_match": 1
+              }
+            }
+          ],
+          "should": [],
+          "must_not": []
+        }
+      }
+    }

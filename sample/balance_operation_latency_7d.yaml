@@ -1,0 +1,36 @@
+name: Name
+description: >
+  description
+backend: elasticsearch
+exporters:
+  - gsheets:
+      sheet_id: 1NVJyE7_9QyhW1GuY2rJePTRRNizMGNA_B5IvvUrdmYo
+      worksheet_name: balance
+time_window: 7d
+method: percentile
+service_level_indicator:
+  percentiles: [95.0, 99.0, 99.9]
+  es_index: traces-apm*,apm-*,logs-apm*,apm-*,metrics-apm*,apm-*
+  value_key: span.duration.us
+  query: >
+    {
+      "query": {
+        "bool": {
+          "must": [],
+          "filter": [
+              {
+                  "exists": {
+                      "field": "span.duration.us"
+                  }
+              },
+              {
+                  "match_phrase": {
+                      "span.name": "latency_LATENCY_BALANCE_OPERATION_UPDATE_BALANCE"
+                  }
+              }
+          ],
+          "should": [],
+          "must_not": []
+        }
+      }
+    }

@@ -1,0 +1,33 @@
+name: Database Latency SLO
+description: >
+  Latency for Postgres Database, 99th percentile of latencies should be less than 10ms
+backend: elasticsearch
+exporters: [gsheets]
+time_window: 24h
+method: percentile
+service_level_indicator:
+  percentiles: [95.0, 99.0, 99.9]
+  es_index: traces-apm*,apm-*,logs-apm*,apm-*,metrics-apm*,apm-*
+  value_key: transaction.duration.us
+  query: >
+    {
+      "query": {
+        "bool": {
+          "must": [],
+          "filter": [
+              {
+                  "exists": {
+                      "field": "transaction.duration.us"
+                  }
+              },
+              {
+                  "match_phrase": {
+                      "labels.db_system": "postgresql"
+                  }
+              }
+          ],
+          "should": [],
+          "must_not": []
+        }
+      }
+    }
