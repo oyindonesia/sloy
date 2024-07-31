@@ -121,3 +121,59 @@ The required fields are:
 The optional fields are:
 - `description`: SLO description
 - `exporters`: Exporters to use
+
+### Specific SLI Configuration
+**elasticsearch**
+
+For method `percentile`, the required fields are:
+- `percentiles`: Percentiles to calculate
+- `es_index`: Elasticsearch index pattern
+- `value_key`: Key to calculate percentile
+- `query`: Elasticsearch query
+
+For method `error_rate`, the required fields are:
+- `es_index`: Elasticsearch index pattern
+- `query_bad`: Elasticsearch query
+- `query_good`: Elasticsearch query
+
+**cloudlogging**
+
+For method `percentile`, the required fields are:
+- `percentiles`: Percentiles to calculate
+- `value_key`: Key to calculate percentile
+- `query`: Cloud Logging query
+
+For method `error_rate`, the required fields are:
+- `filter_bad`: Cloud Logging filter
+- `filter_good`: Cloud Logging filter
+
+### Specific Exporter Configuration
+**gsheets**
+
+The required fields for the global config are:
+- `credentials`: Google Cloud credentials
+- `sheet_id`: Google Sheets ID
+- `worksheet_name`: Google Sheets worksheet name
+
+You can also use the optional fields for SLO configuration. If there isn't any config specified in the SLO configuration, the exporter will use the global configuration. The optional fields for SLO configuration are:
+- `sheet_id`: Google Sheets ID
+- `worksheet_name`: Google Sheets worksheet name
+
+**slack**
+
+The required fields for the global config are:
+- `token`: Slack token
+- `channel`: Slack channel
+
+You can also use the optional fields for SLO configuration. If there isn't any config specified in the SLO configuration, the exporter will use the global configuration. The optional fields for SLO configuration are:
+- `channel`: Slack channel
+
+## Computing SLO
+To calculate SLO, start the app and hit it with the following command:
+```bash
+curl -X POST --data-binary @slo_config.yaml <URL>/compute
+```
+or
+```bash
+curl -X POST --header "Content-Type: application/json" -d '{slo_config_json}' <URL>/compute
+```
